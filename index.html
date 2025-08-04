@@ -1,130 +1,110 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=1080, initial-scale=1.0" />
   <title>aCoach Edzésösszegző</title>
   <style>
     body {
       font-family: Verdana, sans-serif;
-      background-color: #fff;
+      background: url('summary_base.png') no-repeat center center;
+      background-size: cover;
       width: 1080px;
       height: 1920px;
       margin: 0 auto;
-      padding: 60px 80px;
-      color: black;
+      position: relative;
+      color: white;
     }
-
-    .headline {
+    .label {
+      font-size: 24px;
+      font-weight: normal;
+      margin-bottom: 8px;
+    }
+    .value {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+    .section {
+      position: absolute;
+      left: 100px;
+    }
+    #workoutName {
+      top: 200px;
       font-size: 60px;
       font-weight: bold;
-      margin-bottom: 10px;
     }
-
-    .duration {
-      font-size: 40px;
-      margin-bottom: 60px;
+    #duration {
+      top: 300px;
     }
-
-    .section {
-      margin-bottom: 80px;
+    #lifting {
+      top: 380px;
     }
-
-    .section-title {
-      font-size: 32px;
+    #cardio {
+      top: 780px;
+    }
+    #footer {
+      top: 1180px;
+      font-size: 50px;
       font-weight: bold;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      font-size: 32px;
-      row-gap: 10px;
-    }
-
-    .label {
-      font-weight: bold;
-      text-align: center;
-      text-decoration: underline;
-      margin-bottom: 10px;
-    }
-
-    .value {
-      text-align: center;
     }
   </style>
 </head>
 <body>
+  <div class="section value" id="workoutName">Teszt edzés</div>
+  <div class="section value" id="duration"></div>
 
-  <div class="headline" id="workoutName">Edzés neve</div>
-  <div class="duration" id="durationFormatted">Időtartam</div>
-
-  <div class="section" id="liftingSection" style="display: none;">
-    <div class="section-title">Lifting</div>
-    <div class="grid">
-      <div class="label">Weights Lifted</div>
-      <div class="label">Exercises</div>
-      <div class="label">Sets</div>
-      <div class="value" id="totalWeight">-</div>
-      <div class="value" id="exercises">-</div>
-      <div class="value" id="sets">-</div>
-    </div>
+  <div class="section" id="lifting" style="display: none;">
+    <div class="label">Lifting</div>
+    <div class="label">Weights Lifted</div>
+    <div class="value" id="totalWeight"></div>
+    <div class="label">Exercises</div>
+    <div class="value" id="exercises"></div>
+    <div class="label">Sets</div>
+    <div class="value" id="sets"></div>
   </div>
 
-  <div class="section" id="cardioSection" style="display: none;">
-    <div class="section-title">Cardio</div>
-    <div class="grid">
-      <div class="label">Duration</div>
-      <div class="label">Distance</div>
-      <div class="label">Pace</div>
-      <div class="value" id="cardioTime">-</div>
-      <div class="value" id="distance">-</div>
-      <div class="value" id="pace">-</div>
-    </div>
+  <div class="section" id="cardio" style="display: none;">
+    <div class="label">Cardio</div>
+    <div class="label">Duration</div>
+    <div class="value" id="cardioTime"></div>
+    <div class="label">Distance</div>
+    <div class="value" id="distance"></div>
+    <div class="label">Pace</div>
+    <div class="value" id="pace"></div>
   </div>
+
+  <div class="section" id="footer">aCoach</div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
+    const getParam = (key) => decodeURIComponent(params.get(key) || "");
 
-    const getParam = (key) => decodeURIComponent(params.get(key) || '');
+    const workoutName = getParam("WorkoutName");
+    const duration = getParam("DurationFormatted");
+    const totalWeight = getParam("TotalWeight");
+    const exercises = getParam("Exercises");
+    const sets = getParam("Sets");
+    const cardioTime = getParam("CardioTime");
+    const distance = getParam("Distance");
+    const pace = getParam("Pace");
 
-    // Static fields
-    const workoutName = getParam('WorkoutName');
-    const durationFormatted = getParam('DurationFormatted');
+    if (workoutName) document.getElementById("workoutName").textContent = workoutName;
+    if (duration) document.getElementById("duration").textContent = duration;
 
-    if (workoutName) {
-      document.getElementById('workoutName').textContent = workoutName;
-    }
-    if (durationFormatted) {
-      document.getElementById('durationFormatted').textContent = durationFormatted;
-    }
-
-    // Lifting Section
-    const totalWeight = getParam('TotalWeight');
-    const exercises = getParam('Exercises');
-    const sets = getParam('Sets');
-
-    if (parseInt(totalWeight) > 0) {
-      document.getElementById('liftingSection').style.display = 'block';
-      document.getElementById('totalWeight').textContent = totalWeight;
-      document.getElementById('exercises').textContent = exercises;
-      document.getElementById('sets').textContent = sets;
+    if (parseFloat(totalWeight) > 0) {
+      document.getElementById("lifting").style.display = "block";
+      document.getElementById("totalWeight").textContent = totalWeight;
+      document.getElementById("exercises").textContent = exercises;
+      document.getElementById("sets").textContent = sets;
     }
 
-    // Cardio Section
-    const cardioTime = getParam('CardioTime');
-    const distance = getParam('Distance');
-    const pace = getParam('Pace');
-
-    if (parseInt(cardioTime) > 0) {
-      document.getElementById('cardioSection').style.display = 'block';
-      document.getElementById('cardioTime').textContent = cardioTime;
-      document.getElementById('distance').textContent = distance;
-      document.getElementById('pace').textContent = pace;
+    if (parseFloat(cardioTime) > 0) {
+      document.getElementById("cardio").style.display = "block";
+      document.getElementById("cardioTime").textContent = cardioTime;
+      document.getElementById("distance").textContent = distance;
+      document.getElementById("pace").textContent = pace;
     }
   </script>
-
 </body>
 </html>

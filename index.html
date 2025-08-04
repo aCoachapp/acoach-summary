@@ -24,12 +24,12 @@
     }
   </style>
 </head>
-<body>
+<body style="background-color:#111;">
   <div class="text" id="workoutName">Teszt edzés</div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const workoutName = params.get("WorkoutName");
+    const workoutName = decodeURIComponent(params.get("WorkoutName") || "");
     if (workoutName) {
       document.getElementById("workoutName").textContent = workoutName;
     }

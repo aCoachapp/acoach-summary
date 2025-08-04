@@ -18,7 +18,7 @@
     .label {
       font-size: 24px;
       font-weight: normal;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     .value {
       font-size: 28px;
@@ -40,6 +40,13 @@
     #lifting {
       top: 380px;
     }
+    #lifting .row,
+    #cardio .row {
+      display: flex;
+      justify-content: space-between;
+      width: 800px;
+      margin-bottom: 40px;
+    }
     #cardio {
       top: 780px;
     }
@@ -56,22 +63,38 @@
 
   <div class="section" id="lifting" style="display: none;">
     <div class="label">Lifting</div>
-    <div class="label">Weights Lifted</div>
-    <div class="value" id="totalWeight"></div>
-    <div class="label">Exercises</div>
-    <div class="value" id="exercises"></div>
-    <div class="label">Sets</div>
-    <div class="value" id="sets"></div>
+    <div class="row">
+      <div>
+        <div class="label">Weights Lifted</div>
+        <div class="value" id="totalWeight"></div>
+      </div>
+      <div>
+        <div class="label">Exercises</div>
+        <div class="value" id="exercises"></div>
+      </div>
+      <div>
+        <div class="label">Sets</div>
+        <div class="value" id="sets"></div>
+      </div>
+    </div>
   </div>
 
   <div class="section" id="cardio" style="display: none;">
     <div class="label">Cardio</div>
-    <div class="label">Duration</div>
-    <div class="value" id="cardioTime"></div>
-    <div class="label">Distance</div>
-    <div class="value" id="distance"></div>
-    <div class="label">Pace</div>
-    <div class="value" id="pace"></div>
+    <div class="row">
+      <div>
+        <div class="label">Duration</div>
+        <div class="value" id="cardioTime"></div>
+      </div>
+      <div>
+        <div class="label">Distance</div>
+        <div class="value" id="distance"></div>
+      </div>
+      <div>
+        <div class="label">Pace</div>
+        <div class="value" id="pace"></div>
+      </div>
+    </div>
   </div>
 
   <div class="section" id="footer">aCoach</div>

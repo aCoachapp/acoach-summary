@@ -56,10 +56,6 @@
       font-size: 50px;
       font-weight: bold;
     }
-    #lifting .label:first-child,
-    #cardio .label:first-child {
-      font-weight: bold;
-    }
   </style>
 </head>
 <body>
@@ -67,10 +63,10 @@
   <div class="section value" id="duration"></div>
 
   <div class="section" id="lifting" style="display: none;">
-    <div class="label">Lifting</div>
+    <div class="label" style="font-weight: bold;>Lifting</div>
     <div class="row">
       <div>
-        <div class="label">Weights Lifted</div>
+        <div class="label">Weights</div>
         <div class="value" id="totalWeight"></div>
       </div>
       <div>
@@ -85,7 +81,7 @@
   </div>
 
   <div class="section" id="cardio" style="display: none;">
-    <div class="label">Cardio</div>
+    <div class="label" style="font-weight: bold;>Cardio</div>
     <div class="row">
       <div>
         <div class="label">Duration</div>

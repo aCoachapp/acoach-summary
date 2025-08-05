@@ -1,50 +1,46 @@
 // netlify/functions/summary.js
-
 const playwright = require("playwright-aws-lambda");
 
 exports.handler = async (event) => {
   try {
-    // A bejövő query paraméterek (WorkoutName, DurationFormatted, stb.)
+    // Paraméterek összerakása
     const queryString = event.rawQuery || "";
     const targetUrl = `https://acoachapp.github.io/acoach-summary/?${queryString}`;
-
     console.log("Betöltendő URL:", targetUrl);
 
-    // Böngésző indítása
-    const browser = await playwright.launchChromium({
-      headless: true
+    // Böngésző indítása Playwright-tal
+    const browser = await playwright.launchChromium({ headless: true });
+    const context = await browser.newContext({
+      viewport: { width: 1080, height: 1920 },
+      deviceScaleFactor: 1
     });
-
-    const page = await browser.newPage({
-      viewport: { width: 1080, height: 1920 }
-    });
+    const page = await context.newPage();
 
     // Oldal betöltése
-    await page.goto(targetUrl, { waitUntil: "networkidle" });
+    await page.goto(targetUrl, { waitUntil: "networkidle", timeout: 30000 });
 
     // Screenshot készítése PNG-ben
-    const screenshotBuffer = await page.screenshot({
-      type: "png",
-      fullPage: true
-    });
+    const screenshotBuffer = await page.screenshot({ type: "png" });
 
     await browser.close();
 
-    // Visszatérés PNG-ként
+    // PNG visszaadása HTTP válaszként
     return {
       statusCode: 200,
       headers: {
         "Content-Type": "image/png",
-        "Content-Disposition": "inline; filename=summary.png"
+        "Content-Disposition": 'inline; filename="summary.png"'
       },
       body: screenshotBuffer.toString("base64"),
       isBase64Encoded: true
     };
+
   } catch (error) {
     console.error("Hiba a summary generálás közben:", error);
     return {
       statusCode: 500,
-      body: `Error generating summary: ${error.message}`
+      body: JSON.stringify({ error: error.message })
     };
   }
 };
+

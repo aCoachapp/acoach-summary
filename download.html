@@ -1,1 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, initial-scale=1.0" />
+<title>aCoach Edzésösszegző Letöltés</title>
+<style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: 0;
+    width: 1080px;
+    height: 1920px;
+  }
+  .container {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: url('summary_base.png') no-repeat center center;
+    background-size: cover;
+    color: white;
+  }
+  .label {
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 4px;
+  }
+  .value {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  .section {
+    position: absolute;
+    left: 100px;
+  }
+  #workoutName {
+    top: 200px;
+    font-size: 60px;
+    font-weight: bold;
+  }
+  #duration {
+    top: 300px;
+    font-size: 30px;
+  }
+  #lifting {
+    top: 380px;
+  }
+  #lifting .row,
+  #cardio .row {
+    display: flex;
+    justify-content: space-between;
+    width: 600px;
+    margin-bottom: 25px;
+  }
+  #cardio {
+    top: 600px;
+  }
+  #footer {
+    top: 800px;
+    font-size: 50px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+<div class="container" id="summary">
+  <div class="section value" id="workoutName"></div>
+  <div class="section value" id="duration"></div>
+
+  <div class="section" id="lifting" style="display: none;">
+    <div class="label" style=font-weight: bold>Lifting</div>
+    <div class="row">
+      <div>
+        <div class="label">Weights Lifted</div>
+        <div class="value" id="totalWeight"></div>
+      </div>
+      <div>
+        <div class="label">Exercises</div>
+        <div class="value" id="exercises"></div>
+      </div>
+      <div>
+        <div class="label">Sets</div>
+        <div class="value" id="sets"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="cardio" style="display: none;">
+    <div class="label" style=font-weight: bold>Cardio</div>
+    <div class="row">
+      <div>
+        <div class="label">Duration</div>
+        <div class="value" id="cardioTime"></div>
+      </div>
+      <div>
+        <div class="label">Distance</div>
+        <div class="value" id="distance"></div>
+      </div>
+      <div>
+        <div class="label">Pace</div>
+        <div class="value" id="pace"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="footer">aCoach</div>
+</div>
+
+<script>
+  function fillData() {
+    const params = new URLSearchParams(window.location.search);
+    const getParam = (key) => decodeURIComponent(params.get(key) || "");
+
+    const workoutName = getParam("WorkoutName");
+    const duration = getParam("DurationFormatted");
+    const totalWeight = getParam("TotalWeight");
+    const exercises = getParam("Exercises");
+    const sets = getParam("Sets");
+    const cardioTime = getParam("CardioTime");
+    const distance = getParam("Distance");
+    const pace = getParam("Pace");
+
+    if (workoutName) document.getElementById("workoutName").textContent = workoutName;
+    if (duration) document.getElementById("duration").textContent = duration;
+
+    if (parseFloat(totalWeight) > 0) {
+      document.getElementById("lifting").style.display = "block";
+      document.getElementById("totalWeight").textContent = totalWeight;
+      document.getElementById("exercises").textContent = exercises;
+      document.getElementById("sets").textContent = sets;
+    }
+
+    if (parseFloat(cardioTime) > 0) {
+      document.getElementById("cardio").style.display = "block";
+      document.getElementById("cardioTime").textContent = cardioTime;
+      document.getElementById("distance").textContent = distance;
+      document.getElementById("pace").textContent = pace;
+    }
+  }
+
+  function downloadImage() {
+    const container = document.getElementById("summary");
+    html2canvas(container, { backgroundColor: null }).then(canvas => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "aCoach
 

@@ -1,41 +1,50 @@
+// netlify/functions/summary.js
+
 const playwright = require("playwright-aws-lambda");
 
 exports.handler = async (event) => {
   try {
-    const params = event.queryStringParameters || {};
-    const baseUrl = "https://acoachapp.github.io/acoach-summary/";
-
-    const searchParams = new URLSearchParams(params).toString();
-    const targetUrl = `${baseUrl}?${searchParams}`;
+    // A bejövő query paraméterek (WorkoutName, DurationFormatted, stb.)
+    const queryString = event.rawQuery || "";
+    const targetUrl = `https://acoachapp.github.io/acoach-summary/?${queryString}`;
 
     console.log("Betöltendő URL:", targetUrl);
 
-    const browser = await playwright.launchChromium({ headless: true });
-    const page = await browser.newPage({
-      viewport: { width: 1080, height: 1920, deviceScaleFactor: 1 }
+    // Böngésző indítása
+    const browser = await playwright.launchChromium({
+      headless: true
     });
 
+    const page = await browser.newPage({
+      viewport: { width: 1080, height: 1920 }
+    });
+
+    // Oldal betöltése
     await page.goto(targetUrl, { waitUntil: "networkidle" });
 
-    const buffer = await page.screenshot({ type: "png", omitBackground: true });
+    // Screenshot készítése PNG-ben
+    const screenshotBuffer = await page.screenshot({
+      type: "png",
+      fullPage: true
+    });
 
     await browser.close();
 
+    // Visszatérés PNG-ként
     return {
       statusCode: 200,
       headers: {
         "Content-Type": "image/png",
         "Content-Disposition": "inline; filename=summary.png"
       },
-      body: buffer.toString("base64"),
+      body: screenshotBuffer.toString("base64"),
       isBase64Encoded: true
     };
-  } catch (err) {
-    console.error("Hiba a summary generálás közben:", err);
+  } catch (error) {
+    console.error("Hiba a summary generálás közben:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message })
+      body: `Error generating summary: ${error.message}`
     };
   }
 };
-

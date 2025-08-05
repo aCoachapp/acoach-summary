@@ -9,6 +9,8 @@
   "dependencies": {
     "puppeteer-core": "10.1.0",
     "chrome-aws-lambda": "10.1.0"
+     "playwright-aws-lambda": "^0.9.0",
+    "playwright-core": "^1.45.0"
   },
   "overrides": {
     "puppeteer-core": "10.1.0",
